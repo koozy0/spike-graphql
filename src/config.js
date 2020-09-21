@@ -6,10 +6,14 @@ if (!loaded) {
   throw new Error('.env not loaded');
 }
 
-const { PORT } = process.env;
+const {
+  PORT = 4000,
+  JSON_SERVER_BASE_URL = 'http://localhost:3000',
+} = process.env;
 
 const config = {
-  port: PORT || 4000,
+  port: Number(PORT),
+  baseURL: JSON_SERVER_BASE_URL,
 };
 
 module.exports = config;

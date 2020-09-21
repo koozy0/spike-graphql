@@ -1,18 +1,19 @@
 const express = require('express');
 const { graphqlHTTP } = require('express-graphql');
-const config = require('./config');
+const { port } = require('./config');
 const schema = require('./schema');
 
 const app = express();
 
-app.use(
-  '/graphql',
-  graphqlHTTP({
-    schema,
-    graphiql: true,
-  }),
-);
+// middlewares
+app.use(express.json());
+app.use((req, res, next) => {
+  console.log('gql:', req.method, req.url, req.body);
+  next();
+});
 
-app.listen(config.port, () =>
-  console.log(`Server started on port ${config.port}...`),
-);
+// graphql endpoint
+app.use('/graphql', graphqlHTTP({ schema, graphiql: true }));
+app.use('/', (req, res) => res.json({ msg: 'ok' }));
+
+app.listen(port, () => console.log(`Server started on port ${port}...`));
