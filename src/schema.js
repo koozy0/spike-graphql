@@ -30,9 +30,8 @@ const UserType = new GraphQLObjectType({
       type: new GraphQLList(PersonType),
       resolve: (parent, args) =>
         parent.friends
-          ? api.getAllUsers(
-              parent.friends.map((friend) => `id=${friend}`).join('&'),
-            )
+          ? Promise.all(parent.friends.map((friend) => api.getUserById(friend)))
+          // ? api.getAllUsers(parent.friends.map((friend) => `id=${friend}`).join('&'))
           : [], // select * from users where user.id = friend.id
     },
     posts: {
